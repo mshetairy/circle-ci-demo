@@ -18,12 +18,14 @@ jobs:
   print_output_file:
     docker:
       - image: circleci/node:13.8.0
+    working_directory: /tmp
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - run: cd workspace/
       - run:
           name: "Say hello world"
-          command: cat /tmp/workspace/output.txt
+          command: cat output.txt
 
 workflows:
   default:
