@@ -8,7 +8,7 @@ jobs:
     steps:
       - run: mkdir -p workspace
       - run:
-          name: "Say world"
+          name: "Say hello world"
           command: echo "hello world" > /tmp/workspace/output.txt
       - persist_to_workspace:
           root: /tmp/workspace
@@ -19,11 +19,11 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run:
-          name: "Say world"
-          command: cat output.txt
       - attach_workspace:
           at: /tmp/workspace
+      - run:
+          name: "Say hello world"
+          command: cat /tmp/workspace/output.txt
 
 workflows:
   default:
