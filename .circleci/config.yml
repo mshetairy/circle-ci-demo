@@ -4,6 +4,7 @@ jobs:
   save_hello_world_output:
     docker:
       - image: circleci/node:13.8.0
+    working_directory: /tmp
     steps:
       - checkout
       - run: mkdir -p workspace
