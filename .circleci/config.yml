@@ -1,23 +1,34 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
-version: 2.1
+version: 2.1 # circle-ci API version that the config file communicates with.
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  test-env-var:
+  save_hello_world_output:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
       - run:
-          name: "ENV_VAR DEMO"
-          command: "echo ${MY_NAME_VAR}"
+          name: "Say world"
+          command: echo "hello world" > output.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - output.txt
 
+  print_output_file:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: "Say world"
+          command: cat output.txt
+      - attach_workspace:
+          at: /tmp/workspace
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  default:
     jobs:
-      - test-env-var 
+      - save_hello_world_output
+      - print_output_file:
+          requires:
+            - save_hello_world_output
