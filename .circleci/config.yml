@@ -9,7 +9,7 @@ jobs:
       - run: mkdir -p workspace
       - run:
           name: "Say world"
-          command: echo "hello world" > output.txt
+          command: echo "hello world" > /tmp/workspace/output.txt
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
@@ -21,7 +21,7 @@ jobs:
     steps:
       - run:
           name: "Say world"
-          command: cat output.txt
+          command: cat /tmp/workspace/output.txt
       - attach_workspace:
           at: /tmp/workspace
 
