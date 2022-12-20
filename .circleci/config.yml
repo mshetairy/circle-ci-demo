@@ -6,7 +6,6 @@ jobs:
       - image: circleci/node:13.8.0
     working_directory: /tmp
     steps:
-      - checkout
       - run: mkdir -p workspace
       - run:
           name: "Say world"
@@ -20,7 +19,6 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - checkout
       - run:
           name: "Say world"
           command: cat output.txt
