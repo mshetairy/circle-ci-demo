@@ -21,7 +21,7 @@ jobs:
     steps:
       - run:
           name: "Say world"
-          command: cat /tmp/workspace/output.txt
+          command: cat output.txt
       - attach_workspace:
           at: /tmp/workspace
 
