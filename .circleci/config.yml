@@ -3,45 +3,21 @@ version: 2.1 # circle-ci API version that the config file communicates with.
 commands:
   print_pipeline_id:
     description: "A simple command that prints the Circle CI Workflow ID"
+    parameters:
+      id:
+        type: string
     steps:
-      - run: echo $CIRCLE_WORKFLOW_ID
+      - run: echo <<  parameters.id >>
 
 jobs:
   my_command_test:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - print_pipeline_id
-
-  save_hello_world_output:
-    docker:
-      - image: circleci/node:13.8.0
-    working_directory: /tmp
-    steps:
-      - run: mkdir -p workspace
-      - run:
-          name: "Say hello world"
-          command: echo "hello world" > /tmp/workspace/output.txt
-      - persist_to_workspace:
-          root: /tmp/workspace
-          paths:
-            - output.txt
-
-  print_output_file:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: "Say hello world"
-          command: cat /tmp/workspace/output.txt
+      - print_pipeline_id:
+          id: <<  pipeline.id >>
 
 workflows:
   default:
     jobs:
       - my_command_test
-      # - save_hello_world_output
-      # - print_output_file:
-      #     requires:
-      #       - save_hello_world_output
