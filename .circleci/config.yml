@@ -1,6 +1,6 @@
 version: 2.1 # circle-ci API version that the config file communicates with.
 
-command:
+commands:
   print_pipeline_id:
     description: "A simple command that prints the Circle CI Workflow ID"
     steps:
