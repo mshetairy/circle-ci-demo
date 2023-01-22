@@ -1,18 +1,23 @@
-version: 2.1 # circle-ci API version that the config file communicates with.
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@2.0.3
 
 jobs:
-  excercise_job_failure:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: exit 1
-
-      - run:
-          name: Print Error Message
-          command: echo "Hello Error!"
-          when: on_fail
+  create_infrastructure: 
+        docker:
+          - image: amazon/aws-cli
+        steps:
+          - checkout
+          - run:
+              name: Create Cloudformation Stack
+              command: |
+                aws cloudformation deploy \
+                  --template-file template.yml \
+                  --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+                  --region us-east-1
 
 workflows:
-  default:
+  myWorkflow:
     jobs:
-      - excercise_job_failure
+      - create_infrastructure
