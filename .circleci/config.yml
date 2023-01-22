@@ -25,13 +25,18 @@ jobs:
       - add_ssh_keys:
               fingerprints: ["25:d8:8e:51:98:ec:a8:92:bd:d5:26:32:8a:8b:fa:53"] 
       - run:
-          name: Install Ansible
+          name: Install Dependenciess
           command: |
-            apk add --update ansible
+            # apk add --update ansible
+            apt-get update -y
+            apt install ansible -y
+            which ansible
       - run:
-          name: Run Playbook and Configure server
+          name: Configure Server
           command: |
-            ansible-playbook main.yml -i inventory
+            cd .circleci/ansible
+            cat ./inventory
+            ansible-playbook -i inventory main.yml
 
 workflows:
   myWorkflow:
