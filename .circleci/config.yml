@@ -3,19 +3,28 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@2.0.3
 
+commands:
+  destory_environment:
+    steps:
+      - run:
+          name: Destory Environment
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
+
 jobs:
-  # create_infrastructure: 
-  #       docker:
-  #         - image: amazon/aws-cli
-  #       steps:
-  #         - checkout
-  #         - run:
-  #             name: Create Cloudformation Stack
-  #             command: |
-  #               aws cloudformation deploy \
-  #                 --template-file template.yml \
-  #                 --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-  #                 --region us-east-1
+  create_infrastructure: 
+        docker:
+          - image: amazon/aws-cli
+        steps:
+          - checkout
+          - run:
+              name: Create Cloudformation Stack
+              command: |
+                aws cloudformation deploy \
+                  --template-file template.yml \
+                  --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+                  --region us-east-1
 
   # configure_infrastructure: 
   #   docker:
@@ -44,20 +53,14 @@ jobs:
     steps:
       - run: apk add --update curl
       - run:
-          name: Smoke Test
-          command: |
-            URL="https://blog.udacity.com/"
-            # Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
+          name: Simulate Failure
+          command: return 1
+      - destory_environment
 
 workflows:
   myWorkflow:
     jobs:
-      # - create_infrastructure
+      - create_infrastructure
       # - configure_infrastructure 
       - smoke_test
+        requires: create_infrastructure
